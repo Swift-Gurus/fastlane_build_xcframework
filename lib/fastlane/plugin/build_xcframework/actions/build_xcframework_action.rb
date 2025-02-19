@@ -45,7 +45,11 @@ module Fastlane
         else
           Actions::XCFrameworkBuilder.run(paths_components)
         end
-        Actions::BuildUtils.clean_temp_folder(paths_components)
+
+        if params[:preserve_derive_data].nil?
+          Actions::BuildUtils.clean_temp_folder(paths_components)
+        end
+
         UI.success("Build succeed")
       end
 
@@ -132,7 +136,12 @@ module Fastlane
           FastlaneCore::ConfigItem.new(key: :sim_archs,
                                        description: "Build for sim architectures",
                                        optional: true,
-                                       type: Array)
+                                       type: Array),
+
+          FastlaneCore::ConfigItem.new(key: :preserve_derive_data,
+                                       type: Boolean,
+                                       optional: true,
+                                       description: "Wont delete derived data folder"),
         ]
       end
 
